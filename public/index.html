@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Meesho Room Finder &amp; Booking</title>
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-dot"></span>
+    <h1>Meesho Room Finder</h1>
+  </div>
+  <div class="rush-indicator" id="rushIndicator" hidden>⚡ Rush hour active (3–6 PM) · optimized allotment</div>
+</header>
+
+<div class="dashboard" id="dashboard">
+  <div class="stat"><span class="stat-num" id="statTotal">0</span><span class="stat-label">Rooms on floor</span></div>
+  <div class="stat vacant"><span class="stat-num" id="statVacant">0</span><span class="stat-label">Vacant</span></div>
+  <div class="stat occupied"><span class="stat-num" id="statOccupied">0</span><span class="stat-label">Occupied</span></div>
+  <button class="btn btn-ghost" id="findRoomBtn">🎯 Find me a room</button>
+  <button class="btn btn-ghost" id="editLayoutBtn">✎ Edit layout</button>
+  <label class="btn btn-ghost upload-btn">
+    ⬆ Upload map
+    <input type="file" id="mapUploadInput" accept="image/*" hidden />
+  </label>
+</div>
+
+<nav class="floor-tabs" id="floorTabs">
+  <button class="floor-tab active" data-floor="3">3rd Floor</button>
+  <button class="floor-tab" data-floor="4">4th Floor</button>
+  <button class="floor-tab" data-floor="5">5th Floor</button>
+  <button class="floor-tab" data-floor="11">11th Floor</button>
+</nav>
+
+<div class="legend">
+  <span class="legend-item"><i class="dot green"></i> Vacant — click to book</span>
+  <span class="legend-item"><i class="dot red"></i> Occupied — click to manage</span>
+  <span class="legend-item legend-hint" id="calibrateHint" hidden>Drag boxes to reposition · drag ◢ handle to resize</span>
+</div>
+
+<main class="map-wrap">
+  <div class="map-stage" id="mapStage">
+    <img id="mapImage" alt="Floor map" draggable="false" />
+    <div id="roomLayer" class="room-layer"></div>
+    <div class="map-empty" id="mapEmpty" hidden>
+      <p>No map uploaded for this floor yet.</p>
+    </div>
+  </div>
+</main>
+
+<!-- BOOKING MODAL (movie-seat style) -->
+<div class="modal-backdrop" id="bookModal" hidden>
+  <div class="modal modal-wide" role="dialog" aria-modal="true">
+    <button class="modal-close" data-close>&times;</button>
+    <div class="modal-head">
+      <h2 id="bookRoomName">Room</h2>
+      <p id="bookRoomMeta" class="muted"></p>
+    </div>
+
+    <div class="screen-wrap">
+      <div class="screen">Select your time slot(s)</div>
+    </div>
+
+    <div class="slot-grid" id="slotGrid"></div>
+
+    <div class="slot-legend">
+      <span><i class="chip chip-free"></i> Available</span>
+      <span><i class="chip chip-selected"></i> Selected</span>
+      <span><i class="chip chip-booked"></i> Booked</span>
+      <span><i class="chip chip-past"></i> Past</span>
+      <span>⚡ Rush hour</span>
+    </div>
+
+    <div class="fields-row">
+      <div class="field">
+        <label for="strengthInput">Strength (people)</label>
+        <input type="number" id="strengthInput" min="1" value="1" />
+      </div>
+      <div class="field">
+        <label for="bookedByInput">Booked by</label>
+        <input type="text" id="bookedByInput" placeholder="Your name" />
+      </div>
+    </div>
+    <p class="oversize-warning" id="oversizeWarning" hidden></p>
+    <p class="modal-error" id="bookError" hidden></p>
+
+    <div class="summary-bar">
+      <div class="summary-info">
+        <strong id="summaryRange">No slot selected</strong>
+        <span id="summaryMeta" class="muted"></span>
+      </div>
+      <button class="btn btn-primary" id="confirmBookBtn" disabled>Book Room</button>
+    </div>
+  </div>
+</div>
+
+<!-- OCCUPIED MODAL -->
+<div class="modal-backdrop" id="occupiedModal" hidden>
+  <div class="modal" role="dialog" aria-modal="true">
+    <button class="modal-close" data-close>&times;</button>
+    <div class="modal-head">
+      <h2 id="occRoomName">Room</h2>
+      <p id="occRoomMeta" class="muted"></p>
+    </div>
+    <div class="occ-details" id="occDetails"></div>
+    <button class="btn btn-danger" id="leaveEarlyBtn">End Meeting Early / Free Up Room</button>
+  </div>
+</div>
+
+<!-- FIND A ROOM PANEL -->
+<div class="modal-backdrop" id="findModal" hidden>
+  <div class="modal" role="dialog" aria-modal="true">
+    <button class="modal-close" data-close>&times;</button>
+    <div class="modal-head">
+      <h2>🎯 Find me a room</h2>
+      <p class="muted">Best-fit vacant room across all floors, smallest sufficient capacity first.</p>
+    </div>
+    <div class="fields-row">
+      <div class="field">
+        <label for="findStrength">Strength (people)</label>
+        <input type="number" id="findStrength" min="1" value="4" />
+      </div>
+      <div class="field">
+        <label for="findStart">Slot start</label>
+        <select id="findStart"></select>
+      </div>
+      <div class="field">
+        <label for="findEnd">Slot end</label>
+        <select id="findEnd"></select>
+      </div>
+    </div>
+    <button class="btn btn-primary" id="findGoBtn">Search</button>
+    <div id="findResults" class="find-results"></div>
+  </div>
+</div>
+
+<div class="toast-stack" id="toastStack"></div>
+
+<script src="js/app.js"></script>
+</body>
+</html>

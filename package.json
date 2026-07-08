@@ -1,0 +1,13 @@
+{
+  "name": "meesho-room-booking",
+  "version": "1.0.0",
+  "description": "Movie-seat style closed-room finder & booking system for 3F/4F/5F/11F",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "multer": "^2.0.0"
+  }
+}

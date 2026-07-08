@@ -1,0 +1,12 @@
+services:
+  room-booking:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - TZ=Asia/Kolkata
+      - PORT=3000
+    volumes:
+      - ./data:/app/data
+      - ./public/maps:/app/public/maps
+    restart: unless-stopped
